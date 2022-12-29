@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
-import { Box, Typography, TextField, Button, inputAdornmentClasses } from '@mui/material';
+import { Box, Typography, TextField, Button } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { getIncioDeSesion, registro, getPersonaByDocumento } from '../services/serviceLogin'
 import fondo from '../assets/images/fondoLogin.jpg'
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './auth'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,8 +24,10 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const Login = () => {
+  
   const classes = useStyles();
 
+  const auth = useAuth();
   const [isRegistro, setIsRegistro] = useState(false);
   const [inpust, setInpust] = useState({
     documento: '',
@@ -74,25 +78,26 @@ export const Login = () => {
   const validarDocumento = async () => {
     const documentoValido = await getPersonaByDocumento(inpust.documento);
 
-    if (documentoValido === 'true' && isRegistro) {
+    if (documentoValido.ok && isRegistro) {
       setPersonaValida(true);
       setErrorDocumento(false);
 
     } else if (inpust.documento !== '') {
+      const respuesta = await documentoValido.text();
       setErrorDocumento(true);
-      setLeyendaErrorDocumento(documentoValido);
+      setLeyendaErrorDocumento(respuesta);
       setErrorContrasenia(true);
       setLeyendaErrorContrasenia('El campo es obligatorio');
     }
   }
+  const navigate = useNavigate();
 
   const iniciarSesion = async () => {
     const loginResponse = await getIncioDeSesion(inpust.documento, inpust.contrasenia);
     const respuesta = await loginResponse.text();
-    if (loginResponse.ok && respuesta === 'cliente') {
-      alert('exito- aqui va la ventana de home de inquilino')
-    } else if (loginResponse.ok && respuesta === 'admin') {
-      alert('exito- aqui va la ventana de home de administrador')
+    if (loginResponse.ok) {
+      auth.login(inpust.documento, inpust.contrasenia);
+      navigate('/home');
     } else if (!loginResponse.ok && inpust.documento !== '' && inpust.contrasenia !== '') {
       setErrorDocumento(true);
       setErrorContrasenia(true);
@@ -104,7 +109,8 @@ export const Login = () => {
   const registrarse = async () => {
     const registroResponse = await registro(inpust.documento, inpust.contrasenia)
     if (registroResponse.ok && inpust.documento !== '' && inpust.contrasenia !== '') {
-      alert('exito- aqui va la ventana de home de inquilino registrado')
+      auth.login(inpust.documento, inpust.contrasenia);
+      navigate('/home');
     } else if (!registroResponse.ok) {
       const respuesta = await registroResponse.text();
       setErrorDocumento(true);
