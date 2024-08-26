@@ -1,17 +1,17 @@
-import { crearReclamo,  getReclamos} from './../constants'
+import {crearReclamo, getReclamos} from './../constants'
 
 
-export const crear_reclamo = async (reclamo, documento) => {
+export const createComplaint = async (complaintData, documentUser) => {
     const data = {
-        ubicacion: reclamo.ubicacion,
-        descripcion: reclamo.descripcion,
-        identificador: reclamo.edificio.codigoUnidad,
-        codigoEdificio:reclamo.edificio.codigoEdificio,
-        imagenesByIdReclamo:[{
-            dataFoto: reclamo.fotos
+        ubicacion: complaintData.complaintLocation,
+        descripcion: complaintData.complaintDescription,
+        identificador: complaintData.unitID,
+        codigoEdificio: complaintData.building.buildingID,
+        imagenesByIdReclamo: [{
+            dataFoto: complaintData.image
         }],
         personasByDocumento: {
-            documento: documento
+            documento: documentUser
         }
 
     }

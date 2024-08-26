@@ -8,6 +8,8 @@ const getInquilino = 'http://localhost:8080/api/inquilino/getInquilinos/';
 
 const getEdificio = 'http://localhost:8080/api/edificio/';
 
+const getBuildingByTenant = 'http://localhost:8080/api/edificio/getBuildingWithUnits/';
+
 const getUnidad = 'http://localhost:8080/api/unidad/getUnidad/'
 
 const crearReclamo = 'http://localhost:8080/api/reclamo/';
@@ -25,5 +27,6 @@ export {
     getUnidad,
     crearReclamo,
     crearEdificio,
-    getReclamos
+    getReclamos,
+    getBuildingByTenant
 }

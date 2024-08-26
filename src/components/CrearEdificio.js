@@ -1,8 +1,8 @@
-import { Box, Button, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import {Box, Button, TextField, Typography} from '@mui/material'
+import React, {useState} from 'react'
 import Edificio from './Edificio'
-import { crear } from './../services/edificioService'
-import { useNavigate } from 'react-router-dom';
+import {crear} from './../services/edificioService'
+import {useNavigate} from 'react-router-dom';
 
 
 export function CrearEdificio() {
@@ -28,7 +28,7 @@ export function CrearEdificio() {
 
         setIsExito('inicio')
         setInputs({
-            nombre: '',
+            nameUser: '',
             direccion: ''
         })
     }
@@ -92,7 +92,7 @@ export function CrearEdificio() {
                         </TextField>
 
                         <Button
-                            sx={{ marginTop: 2 }}
+                            sx={{marginTop: 2}}
                             variant='contained'
                             color='primary'
                             fullWidth
@@ -105,8 +105,7 @@ export function CrearEdificio() {
                 </form>
             </>
         )
-    }
-    else {
+    } else {
         return (
             <>
                 <Edificio></Edificio>
@@ -135,7 +134,7 @@ export function CrearEdificio() {
                         Edificio creado con exito!
                     </Typography>
                     <Button
-                        onClick={volver} fullWidth sx={{ marginTop: 2 }} variant='contained'
+                        onClick={volver} fullWidth sx={{marginTop: 2}} variant='contained'
                         color='secondary'>Volver
                     </Button>
 

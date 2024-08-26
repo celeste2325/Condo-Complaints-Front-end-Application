@@ -1,9 +1,8 @@
 import React from 'react'
-import { Box, Typography, Button } from '@mui/material';
+import {Box, Button, Typography} from '@mui/material';
 
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from './auth'
-import { ImportantDevices } from '@mui/icons-material';
+import {useNavigate} from 'react-router-dom';
+import {useAuth} from './auth'
 
 export function Logout() {
 
@@ -28,9 +27,9 @@ export function Logout() {
                 maxWidth={250}
                 alignItems="center"
                 justifyContent="center"
-                
-                margin = 'auto'
-                marginTop =  {'10%'}
+
+                margin='auto'
+                marginTop={'10%'}
                 padding={5}
                 borderRadius={3}
                 boxShadow={'5px 5px 10px #ccc'}
@@ -49,11 +48,11 @@ export function Logout() {
                 <label>¿Estas seguro que quieres salir?</label>
 
                 <Button
-                    type='submit' fullWidth sx={{ marginTop: 2 }} variant='contained'
+                    type='submit' fullWidth sx={{marginTop: 2}} variant='contained'
                     color='primary'>Salir
                 </Button>
                 <Button
-                    onClick={volver} fullWidth sx={{ marginTop: 2 }} variant='contained'
+                    onClick={volver} fullWidth sx={{marginTop: 2}} variant='contained'
                     color='secondary'>Volver
                 </Button>
             </Box>

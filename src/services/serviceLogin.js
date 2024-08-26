@@ -1,4 +1,4 @@
-import { iniciarSesion, registrarse, validarDocumentoPersona } from '../constants';
+import {iniciarSesion, registrarse, validarDocumentoPersona} from '../constants';
 
 export const getIncioDeSesion = async (documento, contrasenia) => {
     const data = {
@@ -29,7 +29,7 @@ const login_registro = async (url, data) => {
     return respuestaLogin;
 }
 
-export const getPersonaByDocumento = async (documento) => {
+export const getPersonByDocument = async (documento) => {
     var requestOptions = {
         method: 'GET',
         redirect: 'follow'

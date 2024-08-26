@@ -1,4 +1,4 @@
-import { getEdificio, crearEdificio } from './../constants'
+import {crearEdificio, getBuildingByTenant, getEdificio} from './../constants'
 
 export const getEdificioByCodigo = async (codigo) => {
     var requestOptions = {
@@ -10,7 +10,17 @@ export const getEdificioByCodigo = async (codigo) => {
     return respuesta;
 };
 
-export const crear = async(data) => {
+export const getBuildingsByTenant = async (tenantDocument) => {
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    };
+
+    const response = await fetch(`${getBuildingByTenant}${tenantDocument}`, requestOptions)
+    return response;
+};
+
+export const crear = async (data) => {
     const datos = {
         "nombre": data.nombre,
         "direccion": data.direccion

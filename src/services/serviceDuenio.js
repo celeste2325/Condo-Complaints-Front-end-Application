@@ -1,4 +1,4 @@
-import { getDuenio } from '../constants'
+import {getDuenio} from '../constants'
 
 export const getDuenioByDocumento = async (documento, contrasenia) => {
     let header = new Headers();
@@ -17,14 +17,14 @@ export const getDuenioByDocumento = async (documento, contrasenia) => {
         method: 'GET',
         headers: header,
         redirect: 'follow'
-      };
-      
-     return await fetch(`${getDuenio}?documento=${documento}`, requestOptions)
-     .then((response) => response.text())
-     .then((data) => {
-         return data;
-     })
-     .catch((error) => {
-         return error;
-     });
+    };
+
+    return await fetch(`${getDuenio}?documento=${documento}`, requestOptions)
+        .then((response) => response.text())
+        .then((data) => {
+            return data;
+        })
+        .catch((error) => {
+            return error;
+        });
 }
