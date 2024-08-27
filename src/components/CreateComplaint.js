@@ -238,7 +238,7 @@ export function CreateComplaint() {
                             startIcon={<CloudUploadIcon/>}
                         >
                             Upload evidence
-                            <VisuallyHiddenInput type="file"/>
+                            <VisuallyHiddenInput type="file" accept='image/*'/>
                         </Button>
 
                         {selectedImage != '' &&
