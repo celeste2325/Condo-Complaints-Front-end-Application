@@ -6,7 +6,7 @@ export const createComplaint = async (complaintData, documentUser) => {
         ubicacion: complaintData.complaintLocation,
         descripcion: complaintData.complaintDescription,
         identificador: complaintData.unitID,
-        codigoEdificio: complaintData.building.buildingID,
+        codigoEdificio: complaintData.buildingName.buildingID,
         imagenesByIdReclamo: [{
             dataFoto: complaintData.image
         }],

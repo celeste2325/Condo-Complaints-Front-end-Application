@@ -1,10 +1,12 @@
 import {Box, Button, MenuItem, TextField, Typography} from '@mui/material'
 import React, {useEffect, useState} from 'react'
+import {styled} from '@mui/material/styles';
 import {NavBar} from './NavBar'
 import {useAuth} from './auth'
 import {getPersonByDocument} from './../services/serviceLogin'
 import {getBuildingsByTenant} from '../services/edificioService'
 import {createComplaint} from '../services/reclamoService'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 export function CreateComplaint() {
     const use = useAuth();
@@ -34,6 +36,18 @@ export function CreateComplaint() {
     const [userData, setUserData] = useState({
         date: '',
         nameUser: ''
+    });
+    const [selectedImage, setSelectedImage] = useState('')
+    const VisuallyHiddenInput = styled('input')({
+        clip: 'rect(0 0 0 0)',
+        clipPath: 'inset(50%)',
+        height: 1,
+        overflow: 'hidden',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        whiteSpace: 'nowrap',
+        width: 1,
     });
 
     useEffect(() => {
@@ -72,7 +86,6 @@ export function CreateComplaint() {
         setComplaintData((prevState) => ({
             ...prevState,
             buildingName: e.target.value,
-            [e.target.name]: e.target.value
         }))
 
         //set tenant units
@@ -85,7 +98,7 @@ export function CreateComplaint() {
         setUnits(unitAux);
     }
 
-    const handleChangeUnit = (e) => {
+    const handleChange = (e) => {
         setComplaintData((prevState) => ({
             ...prevState,
             [e.target.name]: e.target.value
@@ -96,9 +109,11 @@ export function CreateComplaint() {
         const imageValue = e.target.value.split('\\');
         let imageName = imageValue[imageValue.length - 1];
         const fileImage = `http://127.0.0.1:8887/${imageName}`
+        setSelectedImage(imageName);
+
         setComplaintData((prevState) => ({
             ...prevState,
-            [e.target.name]: fileImage
+            image: fileImage,
         }))
     }
 
@@ -137,9 +152,9 @@ export function CreateComplaint() {
                             }
                         }}
                     >
-                        <Typography variant='h5' padding={3}>Create complaint</Typography>
+                        <Typography variant='h6' padding={3}>CREATE COMPLAINT</Typography>
 
-                        <Typography variant='p' padding={1}>{userData.nameUser}, {use.user}</Typography>
+                        <Typography variant='p' padding={1}>{userData.nameUser}- {use.user}</Typography>
 
                         {<TextField
                             name="building"
@@ -166,7 +181,7 @@ export function CreateComplaint() {
                             label="Select unit"
                             value={complaintData.unitID}
                             name='unitID'
-                            onChange={handleChangeUnit}
+                            onChange={handleChange}
                             fullWidth
                             size="small"
                         >
@@ -184,7 +199,7 @@ export function CreateComplaint() {
                             value={complaintData.complaintLocation}
                             type={'text'}
                             name='complaintLocation'
-                            onChange={handleChangeUnit}
+                            onChange={handleChange}
                             fullWidth
                             size="small"
                             variant='outlined'
@@ -200,22 +215,48 @@ export function CreateComplaint() {
                             label="Complaint description"
                             value={complaintData.complaintDescription}
                             name='complaintDescription'
-                            onChange={handleChangeUnit}
+                            onChange={handleChange}
                             fullWidth
                             size="small"
                             variant='outlined'>
                         </TextField>
 
-                        <TextField
-                            margin='normal'
-                            type={'file'}
-                            value={''}
+                        <Button
+                            sx={{marginTop: 2}}
+                            fullWidth
+                            value={complaintData.image}
                             name='image'
                             onChange={handleChangeImage}
-                            fullWidth
-                            size="small"
-                            variant='outlined'>
-                        </TextField>
+                            component="label"
+                            role={undefined}
+                            variant="outlined"
+                            tabIndex={-1}
+                            startIcon={<CloudUploadIcon/>}
+                        >
+                            Upload evidence
+                            <VisuallyHiddenInput type="file"/>
+                        </Button>
+
+                        {selectedImage != '' &&
+                            <TextField
+                                type={'text'}
+                                value={selectedImage}
+                                name='selectedImage'
+                                fullWidth
+                                size="small"
+                                variant='outlined'
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                        '& fieldset': {
+                                            border: 'none',
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                            border: 'none',
+                                        },
+                                    },
+                                }}
+                            >
+                            </TextField>}
 
                         <Button
                             sx={{marginTop: 2}}
