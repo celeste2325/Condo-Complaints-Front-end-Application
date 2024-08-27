@@ -157,6 +157,7 @@ export function CreateComplaint() {
                         <Typography variant='p' padding={1}>{userData.nameUser}- {use.user}</Typography>
 
                         {<TextField
+                            required={true}
                             name="building"
                             margin='normal'
                             id="outlined-select-currency"
@@ -175,6 +176,7 @@ export function CreateComplaint() {
                         </TextField>}
 
                         {units.length > 0 && <TextField
+                            required={true}
                             margin='normal'
                             id="outlined-select-currency"
                             select
@@ -194,6 +196,7 @@ export function CreateComplaint() {
                         }
 
                         <TextField
+                            required={true}
                             margin='normal'
                             label="Complaint location"
                             value={complaintData.complaintLocation}
@@ -210,6 +213,7 @@ export function CreateComplaint() {
                         </TextField>
 
                         <TextField
+                            required={true}
                             margin='normal'
                             type={'text'}
                             label="Complaint description"
