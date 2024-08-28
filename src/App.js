@@ -9,6 +9,7 @@ import Persona from './components/Persona';
 import {Logout} from './components/Logout';
 import {AuthProvider} from './components/auth'
 import {CrearEdificio} from './components/CrearEdificio'
+import {SignUp} from "./components/SignUp";
 
 function App() {
     return (
@@ -17,6 +18,8 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Login/>}/>
                     <Route path="/home" element={<Home/>}/>
+                    <Route path="/signUp" element={<SignUp/>}/>
+                    <Route path="/login" element={<Login/>}/>
                     <Route path="/create-complaint" element={< CreateComplaint/>}/>
                     <Route path="/consultar-reclamos" element={<Reclamo/>}/>
                     <Route path="/administrar-edificios" element={<Edificio/>}/>
