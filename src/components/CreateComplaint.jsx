@@ -26,18 +26,20 @@ export function CreateComplaint() {
         floor: '',
         unitNumber: ''
     }]);
+    const [selectedImage, setSelectedImage] = useState('')
     const [complaintData, setComplaintData] = useState({
         buildingName: '',
         unitID: '',
         complaintLocation: '',
         complaintDescription: '',
-        image: ''
+        image: '',
+        extensionImage: ''
     })
     const [userData, setUserData] = useState({
         date: '',
         nameUser: ''
     });
-    const [selectedImage, setSelectedImage] = useState('')
+
     const VisuallyHiddenInput = styled('input')({
         clip: 'rect(0 0 0 0)',
         clipPath: 'inset(50%)',
@@ -106,14 +108,20 @@ export function CreateComplaint() {
     }
 
     const handleChangeImage = (e) => {
-        const imageValue = e.target.value.split('\\');
-        let imageName = imageValue[imageValue.length - 1];
-        const fileImage = `http://127.0.0.1:8887/${imageName}`
-        setSelectedImage(imageName);
+        const fullName = e.target.value.split('\\').pop();
+        const imageNameAndExtensionArray = fullName.split('.');
+        const extension = imageNameAndExtensionArray.pop();
+        const imageName = imageNameAndExtensionArray.join();
+        const truncatedImageName = imageName.length > 70
+            ? imageName.slice(0, 70) + "..."
+            : imageName;
+
+        setSelectedImage(truncatedImageName);
 
         setComplaintData((prevState) => ({
             ...prevState,
-            image: fileImage,
+            image: truncatedImageName,
+            extensionImage: extension
         }))
     }
 

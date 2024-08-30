@@ -8,7 +8,8 @@ export const createComplaint = async (complaintData, documentUser) => {
         identificador: complaintData.unitID,
         codigoEdificio: complaintData.buildingName.buildingID,
         imagenesByIdReclamo: [{
-            dataFoto: complaintData.image
+            dataFoto: complaintData.image,
+            tipo: complaintData.extensionImage
         }],
         personasByDocumento: {
             documento: documentUser
