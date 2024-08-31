@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react'
 import {styled} from '@mui/material/styles';
 import {NavBar} from './NavBar'
 import {useAuth} from './auth'
-import {getPersonByDocument} from './../services/serviceLogin'
+import {getUserByDocument} from './../services/serviceLogin'
 import {getBuildingsByTenant} from '../services/edificioService'
 import {createComplaint} from '../services/reclamoService'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -59,7 +59,7 @@ export function CreateComplaint() {
     const initialValues = async () => {
         if (use.user !== null) {
             //stores the data of the person who has logged in
-            const informationUser = await getPersonByDocument(use.user).then((response) => response.json());
+            const informationUser = await getUserByDocument(use.user).then((response) => response.json());
             setUserData({
                 ...userData,
                 nameUser: informationUser.nombre
@@ -145,7 +145,7 @@ export function CreateComplaint() {
                 <form onSubmit={handleSubmit}>
                     <Box
                         display="flex"
-                        flexDirection={"column"}
+                        flexDirection="column"
                         justifyContent={"center"}
                         alignItems="center"
                         maxWidth={300}
@@ -177,7 +177,7 @@ export function CreateComplaint() {
                             size="small"
                         >
                             {buildings.map((building) => (
-                                building.name != '' &&
+                                building.name !== '' &&
                                 <MenuItem key={building.buildingID} value={building}>Name: {building.name},
                                     Address: {building.address}</MenuItem>
                             ))}
@@ -249,7 +249,7 @@ export function CreateComplaint() {
                             <VisuallyHiddenInput type="file" accept='image/*'/>
                         </Button>
 
-                        {selectedImage != '' &&
+                        {selectedImage !== '' &&
                             <TextField
                                 type={'text'}
                                 value={selectedImage}
@@ -290,7 +290,7 @@ export function CreateComplaint() {
                 <NavBar></NavBar>
                 <Box
                     display="flex"
-                    flexDirection={"column"}
+                    flexDirection="column"
                     justifyContent={"center"}
                     alignItems="center"
                     maxWidth={300}

@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
 import {Box, Button, TextField, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles";
-import fondo from "../assets/images/fondoLogin.jpg";
-import {getPersonByDocument, registro} from "../services/serviceLogin";
+import fondo from "../assets/images/background.jpg";
+import {getUserByDocument, registro} from "../services/serviceLogin";
 import {useAuth} from "./auth";
 import {useNavigate} from "react-router-dom";
 
@@ -48,7 +48,7 @@ export function SignUp() {
     }
 
     const validateResidentDocument = async () => {
-        const resident = await getPersonByDocument(signUpData.document);
+        const resident = await getUserByDocument(signUpData.document);
         if (resident.ok) {
             const response = await resident.json();
             if (response.contrasenia != null) {

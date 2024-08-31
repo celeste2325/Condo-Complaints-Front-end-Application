@@ -3,7 +3,7 @@ import {Home} from './components/Home';
 import {Login} from './components/Login'
 import {HashRouter, Route, Routes} from 'react-router-dom';
 import {CreateComplaint} from './components/CreateComplaint';
-import {Reclamo} from './components/Reclamo'
+import {Complaint} from './components/Complaint'
 import Edificio from './components/Edificio';
 import Persona from './components/Persona';
 import {Logout} from './components/Logout';
@@ -21,7 +21,7 @@ function App() {
                     <Route path="/signUp" element={<SignUp/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/create-complaint" element={< CreateComplaint/>}/>
-                    <Route path="/consultar-reclamos" element={<Reclamo/>}/>
+                    <Route path="/consultar-reclamos" element={<Complaint/>}/>
                     <Route path="/administrar-edificios" element={<Edificio/>}/>
                     <Route path="/crear-edificio" element={<CrearEdificio/>}/>
                     <Route path="/administrar-personas" element={<Persona/>}/>

@@ -18,6 +18,8 @@ const crearEdificio = 'http://localhost:8080/api/edificio/';
 
 const getReclamos = 'http://localhost:8080/api/reclamo/';
 
+const getComplaintsByTenant = 'http://localhost:8080/api/reclamo/getReclamosByTenant/'
+
 export {
     registrarse,
     iniciarSesion,
@@ -28,5 +30,6 @@ export {
     crearReclamo,
     crearEdificio,
     getReclamos,
-    getBuildingByTenant
+    getBuildingByTenant,
+    getComplaintsByTenant
 }

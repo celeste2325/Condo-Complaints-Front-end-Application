@@ -17,7 +17,7 @@ export const registro = async (documento, contrasenia) => {
 }
 
 const login_registro = async (url, data) => {
-    const respuestaLogin = await fetch(url,
+    const response = await fetch(url,
         {
             headers: {
                 'Accept': 'application/json',
@@ -26,23 +26,16 @@ const login_registro = async (url, data) => {
             method: 'POST',
             body: JSON.stringify(data)
         })
-    return respuestaLogin;
+    return response;
 }
 
-export const getPersonByDocument = async (documento) => {
-    var requestOptions = {
+export const getUserByDocument = async (document) => {
+    const requestOptions = {
         method: 'GET',
         redirect: 'follow'
     };
 
-    const respuesta = await fetch(`${validarDocumentoPersona}${documento}`, requestOptions)
-    return respuesta;
-    /* .then((response) => response.text())
-     .then((data) => {
-         return data;
-     })
-     .catch((error) => {
-         return error;
-     });*/
+    const response = await fetch(`${validarDocumentoPersona}${document}`, requestOptions)
+    return response;
 }
 

@@ -1,4 +1,4 @@
-import {crearReclamo, getReclamos} from './../constants'
+import {crearReclamo, getComplaintsByTenant, getReclamos} from './../constants'
 
 
 export const createComplaint = async (complaintData, documentUser) => {
@@ -36,4 +36,14 @@ export const devuelveReclamos = async () => {
 
     const respuesta = await fetch(getReclamos, requestOptions)
     return respuesta;
+};
+
+export const complaintsByTenant = async (tenantDocument) => {
+    const requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    };
+
+    const response = await fetch(`${getComplaintsByTenant}${tenantDocument}`, requestOptions)
+    return response;
 };

@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {Box, Button, TextField, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {getIncioDeSesion} from '../services/serviceLogin'
-import fondo from '../assets/images/fondoLogin.jpg'
+import fondo from '../assets/images/background.jpg'
 import {useNavigate} from 'react-router-dom';
 import {useAuth} from './auth'
 
@@ -88,7 +88,7 @@ export const Login = () => {
                     </Typography>
 
                     <TextField
-                        error={errorMessage != ''}
+                        error={errorMessage !== ''}
                         helperText={errorMessage}
                         required={true}
                         name="document"
@@ -102,7 +102,7 @@ export const Login = () => {
                     />
 
                     <TextField
-                        error={errorMessage != ''}
+                        error={errorMessage !== ''}
                         helperText={errorMessage}
                         required={true}
                         name='password'
