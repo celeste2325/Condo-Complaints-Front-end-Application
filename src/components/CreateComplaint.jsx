@@ -7,6 +7,7 @@ import {getUserByDocument} from './../services/serviceLogin'
 import {getBuildingsByTenant} from '../services/edificioService'
 import {createComplaint} from '../services/reclamoService'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import {handleUpload} from "../services/fileService";
 
 export function CreateComplaint() {
     const use = useAuth();
@@ -27,6 +28,7 @@ export function CreateComplaint() {
         unitNumber: ''
     }]);
     const [selectedImage, setSelectedImage] = useState('')
+    const [selectedFile, setSelectedFile] = useState(null);
     const [complaintData, setComplaintData] = useState({
         buildingName: '',
         unitID: '',
@@ -39,7 +41,6 @@ export function CreateComplaint() {
         date: '',
         nameUser: ''
     });
-
     const VisuallyHiddenInput = styled('input')({
         clip: 'rect(0 0 0 0)',
         clipPath: 'inset(50%)',
@@ -108,6 +109,7 @@ export function CreateComplaint() {
     }
 
     const handleChangeImage = (e) => {
+        setSelectedFile(e.target.files[0]);
         const fullName = e.target.value.split('\\').pop();
         const imageNameAndExtensionArray = fullName.split('.');
         const extension = imageNameAndExtensionArray.pop();
@@ -134,6 +136,7 @@ export function CreateComplaint() {
         const response = await createComplaint(complaintData, documentUser);
         if (response.ok) {
             const responseJson = await response.json();
+            const saveFile = await handleUpload(selectedFile);
             setComplaintID(responseJson.idReclamo);
         }
     }

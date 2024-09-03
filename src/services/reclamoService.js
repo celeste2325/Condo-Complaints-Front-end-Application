@@ -16,7 +16,7 @@ export const createComplaint = async (complaintData, documentUser) => {
         }
 
     }
-    const respuestaLogin = await fetch(crearReclamo,
+    const saveComplaint = await fetch(crearReclamo,
         {
             headers: {
                 'Accept': 'application/json',
@@ -25,7 +25,7 @@ export const createComplaint = async (complaintData, documentUser) => {
             method: 'POST',
             body: JSON.stringify(data)
         })
-    return respuestaLogin;
+    return saveComplaint;
 }
 
 export const devuelveReclamos = async () => {
