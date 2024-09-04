@@ -12,6 +12,7 @@ import {handleUpload} from "../services/fileService";
 export function CreateComplaint() {
     const use = useAuth();
     const [complaintID, setComplaintID] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
     const [buildings, setBuildings] = useState([{
         name: '',
         address: '',
@@ -107,23 +108,33 @@ export function CreateComplaint() {
             [e.target.name]: e.target.value
         }))
     }
-
-    const handleChangeImage = (e) => {
-        setSelectedFile(e.target.files[0]);
-        const fullName = e.target.value.split('\\').pop();
+    const truncateImage = (imageName, characterLimit) => {
+        const fullName = imageName.split('\\').pop();
         const imageNameAndExtensionArray = fullName.split('.');
         const extension = imageNameAndExtensionArray.pop();
-        const imageName = imageNameAndExtensionArray.join();
-        const truncatedImageName = imageName.length > 70
-            ? imageName.slice(0, 70) + "..."
-            : imageName;
+        const name = imageNameAndExtensionArray.join();
+        const truncatedImageName = name.length > characterLimit
+            ? name.slice(0, characterLimit) + "..."
+            : name;
+        return {
+            truncatedImageName,
+            extension
+        };
+    }
 
-        setSelectedImage(truncatedImageName);
+    const handleChangeImage = (e) => {
+        setErrorMessage('');
+        setSelectedFile(e.target.files[0]);
+
+        //truncate long image name
+        const imageName = e.target.value;
+        const truncatedImageName = truncateImage(imageName, 70);
+        setSelectedImage(truncatedImageName.truncatedImageName);
 
         setComplaintData((prevState) => ({
             ...prevState,
-            image: truncatedImageName,
-            extensionImage: extension
+            image: truncatedImageName.truncatedImageName,
+            extensionImage: truncatedImageName.extension
         }))
     }
 
@@ -133,12 +144,28 @@ export function CreateComplaint() {
     }
 
     const saveComplaint = async (complaintData, documentUser) => {
-        const response = await createComplaint(complaintData, documentUser);
-        if (response.ok) {
-            const responseJson = await response.json();
-            const saveFile = await handleUpload(selectedFile);
-            setComplaintID(responseJson.idReclamo);
+        //The image size must be less than 10 MB.
+        if (selectedFile.size > 10485760) {
+            setErrorMessage("The image size must be less than 10 MB.");
+            return;
         }
+        //Create complaint
+        const saveComplaintResponse = await createComplaint(complaintData, documentUser);
+        if (!saveComplaintResponse.ok) {
+            setErrorMessage('Failed to save complaint');
+            return;
+        }
+        const responseJson = await saveComplaintResponse.json();
+        const {idReclamo} = responseJson;
+
+        //Save the image to a local directory.
+        const saveFile = await handleUpload(selectedFile, idReclamo);
+        if (!saveFile.ok) {
+            //TODO DELETE complaint
+            setErrorMessage(saveFile);
+        }
+        //Complaint with image submitted successfully, set complaintID
+        setComplaintID(idReclamo);
     }
 
     if (complaintID === '') {
@@ -272,7 +299,7 @@ export function CreateComplaint() {
                                 }}
                             >
                             </TextField>}
-
+                        {errorMessage !== '' && <p style={{color: 'red'}}>{errorMessage}</p>}
                         <Button
                             sx={{marginTop: 2}}
                             variant='contained'
@@ -316,12 +343,13 @@ export function CreateComplaint() {
                         Complaint submitted successfully!
                     </Typography>
 
-                    <Typography
+                    {<Typography
                         variant='p'
                         padding={3}
                     >
                         Complaint Number: {complaintID}
                     </Typography>
+                    }
                 </Box>
             </>
         )

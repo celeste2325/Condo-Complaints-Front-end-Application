@@ -20,6 +20,8 @@ const getReclamos = 'http://localhost:8080/api/reclamo/';
 
 const getComplaintsByTenant = 'http://localhost:8080/api/reclamo/getReclamosByTenant/'
 
+const saveFile = 'http://localhost:8080/api/file/'
+
 export {
     registrarse,
     iniciarSesion,
@@ -31,5 +33,6 @@ export {
     crearEdificio,
     getReclamos,
     getBuildingByTenant,
-    getComplaintsByTenant
+    getComplaintsByTenant,
+    saveFile,
 }

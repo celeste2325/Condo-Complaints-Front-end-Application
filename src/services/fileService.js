@@ -1,17 +1,25 @@
-export const handleUpload = async (selectedFile) => {
+import {saveFile} from './../constants'
+
+export const handleUpload = async (selectedFile, complaintID) => {
 
     if (!selectedFile) return;
 
-    const encodedFileName = encodeURIComponent(selectedFile.name);
     const formData = new FormData();
+    const encodedFileName = encodeURIComponent(selectedFile.name);
     formData.append('file', selectedFile, encodedFileName);
 
     try {
-        await fetch('http://localhost:8080/api/file/', {
+        const saveImage = await fetch(`${saveFile}${complaintID}/`, {
             method: 'POST',
             body: formData,
         });
+        if (!saveImage.ok) {
+            const errorText = await saveImage.text();
+            throw new Error(errorText);
+        }
+
+        return saveImage;
     } catch (error) {
-        console.error('Error:', error);
+        return error.message;
     }
 };
