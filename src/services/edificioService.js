@@ -1,4 +1,4 @@
-import {crearEdificio, getBuildingByTenant, getEdificio} from './../constants'
+import {BUILDING_CONTROLLER, GET_BUILDING_WITH_UNITS_BY_TENANT_ID} from '../constants/apiEndpoints'
 
 export const getEdificioByCodigo = async (codigo) => {
     var requestOptions = {
@@ -6,17 +6,17 @@ export const getEdificioByCodigo = async (codigo) => {
         redirect: 'follow'
     };
 
-    const respuesta = await fetch(`${getEdificio}${codigo}`, requestOptions)
+    const respuesta = await fetch(`${BUILDING_CONTROLLER}${codigo}`, requestOptions)
     return respuesta;
 };
 
 export const getBuildingsByTenant = async (tenantDocument) => {
-    var requestOptions = {
+    const requestOptions = {
         method: 'GET',
         redirect: 'follow'
     };
 
-    const response = await fetch(`${getBuildingByTenant}${tenantDocument}`, requestOptions)
+    const response = await fetch(`${GET_BUILDING_WITH_UNITS_BY_TENANT_ID}${tenantDocument}`, requestOptions)
     return response;
 };
 
@@ -26,7 +26,7 @@ export const crear = async (data) => {
         "direccion": data.direccion
     }
 
-    const respuestaLogin = await fetch(crearEdificio,
+    const respuestaLogin = await fetch(BUILDING_CONTROLLER,
         {
             headers: {
                 'Accept': 'application/json',

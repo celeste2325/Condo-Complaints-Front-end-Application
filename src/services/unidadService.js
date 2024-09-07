@@ -1,4 +1,4 @@
-import {getUnidad} from './../constants'
+import {GET_UNIT_BY_UNIT_ID} from '../constants/apiEndpoints'
 
 export const getUnidadByIdentificador = async (identificador) => {
     var requestOptions = {
@@ -6,6 +6,6 @@ export const getUnidadByIdentificador = async (identificador) => {
         redirect: 'follow'
     };
 
-    const respuesta = await fetch(`${getUnidad}${identificador}`, requestOptions)
+    const respuesta = await fetch(`${GET_UNIT_BY_UNIT_ID}${identificador}`, requestOptions)
     return respuesta;
 }

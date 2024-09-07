@@ -1,4 +1,4 @@
-import {getDuenio} from '../constants'
+import {getDuenio} from '../constants/apiEndpoints'
 
 export const getDuenioByDocumento = async (documento, contrasenia) => {
     let header = new Headers();

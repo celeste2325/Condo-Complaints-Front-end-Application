@@ -1,4 +1,4 @@
-import {crearReclamo, getComplaintsByTenant, getReclamos} from './../constants'
+import {COMPLAINT_CONTROLLER, GET_COMPLAINTS_BY_TENANT_OR_ADMIN} from '../constants/apiEndpoints'
 
 
 export const createComplaint = async (complaintData, documentUser) => {
@@ -16,7 +16,7 @@ export const createComplaint = async (complaintData, documentUser) => {
         }
 
     }
-    const saveComplaint = await fetch(crearReclamo,
+    const saveComplaint = await fetch(COMPLAINT_CONTROLLER,
         {
             headers: {
                 'Accept': 'application/json',
@@ -28,22 +28,16 @@ export const createComplaint = async (complaintData, documentUser) => {
     return saveComplaint;
 }
 
-export const devuelveReclamos = async () => {
-    var requestOptions = {
-        method: 'GET',
-        redirect: 'follow'
-    };
-
-    const respuesta = await fetch(getReclamos, requestOptions)
-    return respuesta;
-};
-
-export const complaintsByTenant = async (tenantDocument) => {
+export const getComplaints = async (tenantDocument = null) => {
     const requestOptions = {
         method: 'GET',
         redirect: 'follow'
     };
 
-    const response = await fetch(`${getComplaintsByTenant}${tenantDocument}`, requestOptions)
+    const url = tenantDocument
+        ? `${GET_COMPLAINTS_BY_TENANT_OR_ADMIN}?tenantDocument=${tenantDocument}`
+        : GET_COMPLAINTS_BY_TENANT_OR_ADMIN;
+
+    const response = await fetch(url, requestOptions)
     return response;
 };

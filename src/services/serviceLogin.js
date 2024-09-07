@@ -1,4 +1,4 @@
-import {iniciarSesion, registrarse, validarDocumentoPersona} from '../constants';
+import {iniciarSesion, registrarse, validarDocumentoPersona} from '../constants/apiEndpoints';
 
 export const getIncioDeSesion = async (documento, contrasenia) => {
     const data = {

@@ -114,7 +114,7 @@ export function CreateComplaint() {
         const extension = imageNameAndExtensionArray.pop();
         const name = imageNameAndExtensionArray.join();
         const truncatedImageName = name.length > characterLimit
-            ? name.slice(0, characterLimit) + "..."
+            ? name.slice(0, characterLimit)
             : name;
         return {
             truncatedImageName,
@@ -129,11 +129,13 @@ export function CreateComplaint() {
         //truncate long image name
         const imageName = e.target.value;
         const truncatedImageName = truncateImage(imageName, 70);
-        setSelectedImage(truncatedImageName.truncatedImageName);
+        const imageNameWithoutSpaces = truncatedImageName.truncatedImageName.replace(/\s/g, "");
+
+        setSelectedImage(imageNameWithoutSpaces + "." + truncatedImageName.extension);
 
         setComplaintData((prevState) => ({
             ...prevState,
-            image: truncatedImageName.truncatedImageName,
+            image: imageNameWithoutSpaces,
             extensionImage: truncatedImageName.extension
         }))
     }
@@ -159,7 +161,7 @@ export function CreateComplaint() {
         const {idReclamo} = responseJson;
 
         //Save the image to a local directory.
-        const saveFile = await handleUpload(selectedFile, idReclamo);
+        const saveFile = await handleUpload(selectedFile, idReclamo, selectedImage);
         if (!saveFile.ok) {
             //TODO DELETE complaint
             setErrorMessage(saveFile);

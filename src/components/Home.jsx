@@ -9,7 +9,7 @@ import {NavBar} from './NavBar';
 import {Complaint} from './Complaint'
 import {useAuth} from './auth';
 import {getUserByDocument} from '../services/serviceLogin'
-import {complaintsByTenant, devuelveReclamos} from '../services/reclamoService';
+import {getComplaints} from '../services/reclamoService';
 
 const Item = styled(Paper)(({theme}) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -29,23 +29,18 @@ export function Home() {
 
     useEffect(() => {
         if (auth.user != null) {
-            setComplaintsByTenant();
+            getComplaintsByTenantOrAdmin();
         }
     }, [auth.user])
 
-    const setComplaintsByTenant = async () => {
+    const getComplaintsByTenantOrAdmin = async () => {
         const userByDocument = await (await getUserByDocument(auth.user)).json();
         setUser(userByDocument.nombre);
 
-        if (userByDocument.roles === 'admin') {
-            setIsAdmin(true);
-            //TODO change endpoint to get DTO
-            const getAllComplaints = await (await devuelveReclamos()).json();
-            setComplaints(getAllComplaints);
-        } else {
-            const complaintsByTenantResponse = await (await complaintsByTenant(auth.user)).json();
-            setComplaints(complaintsByTenantResponse);
-        }
+        const isAdmin = userByDocument.roles === 'admin';
+        const tenantDocument = isAdmin ? null : auth.user;
+        const complaintsResponse = await (await getComplaints(tenantDocument)).json();
+        setComplaints(complaintsResponse);
     }
     return (
         <Box

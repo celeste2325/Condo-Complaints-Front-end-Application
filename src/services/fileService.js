@@ -1,15 +1,16 @@
-import {saveFile} from './../constants'
+import {FILE_CONTROLLER, IMAGE_CONTROLLER} from '../constants/apiEndpoints'
 
-export const handleUpload = async (selectedFile, complaintID) => {
+export const handleUpload = async (selectedFile, complaintID, imageSelected) => {
 
     if (!selectedFile) return;
 
     const formData = new FormData();
-    const encodedFileName = encodeURIComponent(selectedFile.name);
+
+    const encodedFileName = encodeURIComponent(imageSelected);
     formData.append('file', selectedFile, encodedFileName);
 
     try {
-        const saveImage = await fetch(`${saveFile}${complaintID}/`, {
+        const saveImage = await fetch(`${FILE_CONTROLLER}${complaintID}/`, {
             method: 'POST',
             body: formData,
         });
@@ -23,3 +24,19 @@ export const handleUpload = async (selectedFile, complaintID) => {
         return error.message;
     }
 };
+
+export const getImage = async (complaintID) => {
+    try {
+        const response = await fetch(`${IMAGE_CONTROLLER}${complaintID}`);
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch image: ${response.statusText}`);
+        }
+
+        const imageBlob = await response.blob();
+        const imageObjectURL = URL.createObjectURL(imageBlob);
+        return imageObjectURL;
+    } catch (error) {
+        console.error('Error:', error.message);
+    }
+}

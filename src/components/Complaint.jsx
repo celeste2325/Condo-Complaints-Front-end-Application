@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {DataGrid, GridPagination} from '@mui/x-data-grid';
 import {Box, Card, CardContent, CardMedia, Typography} from '@mui/material';
-import background from '../../src/assets/images/background.jpg'
+import {getImage} from '../services/fileService';
 
 export function Complaint(props) {
     const complaints = props.complaints;
+    const [complaintImage, setComplaintImage] = useState(null);
     const columns = [
         {field: 'complaintID', headerName: 'Complaint ID', width: 100},
         {field: 'buildingName', headerName: 'Building', width: 170},
@@ -33,8 +34,8 @@ export function Complaint(props) {
                     {selectedComplaint !== '' &&
                         <CardMedia
                             component="img"
-                            height="140"
-                            image={background}
+                            height="auto"
+                            image={complaintImage}
                             title="Photo issue"
                         />
                     }
@@ -79,8 +80,10 @@ export function Complaint(props) {
             setRows(rowsAux);
         }
     }
-    const handleSelectedComplaint = (e) => {
-        setSelectedComplaint(e.row)
+    const handleSelectedComplaint = async (e) => {
+        setSelectedComplaint(e.row);
+        const getImageResponse = await (await getImage(e.row.complaintID));
+        setComplaintImage(getImageResponse);
     }
 
     return (
