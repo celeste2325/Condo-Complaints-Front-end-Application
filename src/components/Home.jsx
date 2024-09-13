@@ -5,11 +5,10 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import {Typography} from '@mui/material';
-import {NavBar} from './NavBar';
 import {Complaint} from './Complaint'
 import {useAuth} from './auth';
-import {getUserByDocument} from '../services/serviceLogin'
-import {getComplaints} from '../services/reclamoService';
+import {getPersonByDocument} from '../services/personService'
+import {getComplaints} from '../services/complaintService';
 
 const Item = styled(Paper)(({theme}) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -25,7 +24,6 @@ export function Home() {
     const auth = useAuth();
     const [user, setUser] = useState('')
     const [complaints, setComplaints] = useState([])
-    const [isAdmin, setIsAdmin] = useState(false)
 
     useEffect(() => {
         if (auth.user != null) {
@@ -34,13 +32,12 @@ export function Home() {
     }, [auth.user])
 
     const getComplaintsByTenantOrAdmin = async () => {
-        const userByDocument = await (await getUserByDocument(auth.user)).json();
-        setUser(userByDocument.nombre);
+        const personByDocument = await getPersonByDocument(auth.user);
+        setUser(personByDocument.data.name);
 
-        const isAdmin = userByDocument.roles === 'admin';
-        const tenantDocument = isAdmin ? null : auth.user;
-        const complaintsResponse = await (await getComplaints(tenantDocument)).json();
-        setComplaints(complaintsResponse);
+        const tenantDocument = auth.isAdmin ? null : auth.user;
+        const complaintsResponse = await getComplaints(tenantDocument);
+        setComplaints(complaintsResponse.data);
     }
     return (
         <Box
@@ -54,12 +51,11 @@ export function Home() {
                 marginTop: {sm: '10%', xs: '16%', lg: '5%'},
             }}
         >
-            <NavBar isAdministrador={isAdmin}/>
             <Grid container spacing={2} columns={12}>
                 <Grid item xs={12}>
                     <Item>
                         <Typography>
-                            {isAdmin ?
+                            {auth.isAdmin ?
                                 `Hi ${user}! Welcome! You can easily manage condo complaints, check tenant issues, and update their status here.
 `
                                 :
@@ -74,7 +70,7 @@ export function Home() {
                         textAlign='center'
                         margin='2%'
                         color={'blue'}>
-                        {isAdmin ? "Tenant Complaints" : "My Complaints"}
+                        {auth.isAdmin ? "Tenant Complaints" : "My Complaints"}
                     </Typography>
                     <Item>
                         <Complaint complaints={complaints}/>

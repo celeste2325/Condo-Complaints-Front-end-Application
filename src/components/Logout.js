@@ -1,5 +1,5 @@
 import React from 'react'
-import {Box, Button, Typography} from '@mui/material';
+import {Box, Button} from '@mui/material';
 
 import {useNavigate} from 'react-router-dom';
 import {useAuth} from './auth'
@@ -14,7 +14,7 @@ export function Logout() {
         auth.logout();
         navigate('/');
     }
-    const volver = () => {
+    const goBack = () => {
         navigate(-1);
     }
 
@@ -23,7 +23,7 @@ export function Logout() {
         >
             <Box
                 display="flex"
-                flexDirection={"column"}
+                flexDirection="column"
                 maxWidth={250}
                 alignItems="center"
                 justifyContent="center"
@@ -39,21 +39,16 @@ export function Logout() {
                     }
                 }}
             >
-                <Typography
-                    variant='h5'
-                    padding={3}>
-                    Logout
-                </Typography>
 
-                <label>¿Estas seguro que quieres salir?</label>
+                <label>Are you sure you want to exit?</label>
 
                 <Button
                     type='submit' fullWidth sx={{marginTop: 2}} variant='contained'
-                    color='primary'>Salir
+                    color='primary'>Sign Out
                 </Button>
                 <Button
-                    onClick={volver} fullWidth sx={{marginTop: 2}} variant='contained'
-                    color='secondary'>Volver
+                    onClick={goBack} fullWidth sx={{marginTop: 2}} variant='contained'
+                    color='secondary'>Go Back
                 </Button>
             </Box>
         </form>

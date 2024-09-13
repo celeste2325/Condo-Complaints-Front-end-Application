@@ -1,8 +1,9 @@
 import React, {useState} from 'react'
 import {Box, Button, TextField, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles";
-import fondo from "../assets/images/background.jpg";
-import {getUserByDocument, registro} from "../services/serviceLogin";
+import background from "../assets/images/background.jpg";
+import {getPersonByDocument} from "../services/personService";
+import {signUp} from "../services/authService";
 import {useAuth} from "./auth";
 import {useNavigate} from "react-router-dom";
 
@@ -17,7 +18,7 @@ export function SignUp() {
     const [errorMessage, setErrorMessage] = useState('')
     const useStyles = makeStyles(theme => ({
         root: {
-            backgroundImage: `url(${fondo})`,
+            backgroundImage: `url(${background})`,
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
@@ -48,27 +49,25 @@ export function SignUp() {
     }
 
     const validateResidentDocument = async () => {
-        const resident = await getUserByDocument(signUpData.document);
-        if (resident.ok) {
-            const response = await resident.json();
-            if (response.contrasenia != null) {
-                setErrorMessage('Account with this document exists.');
-            } else {
-                setIsValidResident(true);
-            }
-        } else {
-            setErrorMessage('Invalid document for resident.');
-        }
+        const personByDocument = await getPersonByDocument(signUpData.document);
 
+        if (!personByDocument.success) {
+            setErrorMessage(personByDocument.error);
+            return;
+        }
+        return personByDocument.data.credential != null ? setErrorMessage('Account with this document exists.') : setIsValidResident(true);
     }
 
     const sign_up = async () => {
-        const response = await registro(signUpData.document, signUpData.password)
-        if (response.ok) {
-            auth.login(signUpData.document, signUpData.password);
-            navigate('/home');
+        const response = await signUp(signUpData)
+        if (!response.success) {
+            setErrorMessage(response.error);
+            return;
         }
+        auth.login(signUpData);
+        navigate('/home');
     }
+
     const navigateSignIn = () => {
         navigate('/login');
     }
@@ -79,7 +78,7 @@ export function SignUp() {
                 <Box
                     className={classes.form}
                     display="flex"
-                    flexDirection={"column"}
+                    flexDirection="column"
                     maxWidth={300}
                     alignItems="center"
                     justifyContent={"center"}
@@ -111,12 +110,12 @@ export function SignUp() {
                         variant='outlined'
                         placeholder='Document'
                         fullWidth
-                        error={errorMessage != ''}
+                        error={errorMessage !== ''}
                     />
 
                     <Button
                         onClick={validateResidentDocument}
-                        disabled={signUpData.document == '' || isValidResident}
+                        disabled={signUpData.document === '' || isValidResident}
                         fullWidth sx={{marginTop: 2, marginBottom: 1}} variant='contained' color='secondary'>
                         Validate Resident
                     </Button>

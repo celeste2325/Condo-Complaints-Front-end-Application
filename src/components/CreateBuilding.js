@@ -1,17 +1,17 @@
 import {Box, Button, TextField, Typography} from '@mui/material'
 import React, {useState} from 'react'
-import Edificio from './Edificio'
-import {crear} from './../services/edificioService'
+import {create_building} from '../services/buildingService'
 import {useNavigate} from 'react-router-dom';
 
 
-export function CrearEdificio() {
+export function CreateBuilding() {
     const navigate = useNavigate();
-    const [isExito, setIsExito] = useState('inicio')
+    const [buildingCreated, setBuildingCreated] = useState(false)
     const [inputs, setInputs] = useState({
-        nombre: '',
-        direccion: ''
+        buildingName: '',
+        address: ''
     })
+
     const handleChange = (e) => {
         setInputs((prevState) => ({
             ...prevState,
@@ -19,25 +19,24 @@ export function CrearEdificio() {
 
         }))
     }
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        crear(inputs).then(setIsExito('exito'));
-        console.log('inpust', inputs);
+        const response = await create_building(inputs);
+        if (response.success) {
+            setBuildingCreated(true);
+        }
     }
-    const volver = () => {
-
-        setIsExito('inicio')
+    const goBack = () => {
+        setBuildingCreated(false)
         setInputs({
-            nameUser: '',
-            direccion: ''
+            buildingName: '',
+            address: ''
         })
     }
-    console.log(isExito);
 
-    if (isExito === 'inicio') {
+    if (!buildingCreated) {
         return (
             <>
-                <Edificio></Edificio>
                 <form onSubmit={handleSubmit}>
                     <Box
                         display="flex"
@@ -60,16 +59,16 @@ export function CrearEdificio() {
                             variant='h5'
                             padding={3}
                         >
-                            Crear Edificio
+                            Register Building
                         </Typography>
 
                         <TextField
-                            name='nombre'
+                            name='buildingName'
                             margin='normal'
                             id="outlined-select-edificio"
                             type={'text'}
-                            label="Nombre"
-                            value={inputs.nombre}
+                            label="Name"
+                            value={inputs.buildingName}
                             onChange={handleChange}
                             fullWidth
                             size="small"
@@ -77,10 +76,10 @@ export function CrearEdificio() {
 
                         <TextField
                             margin='normal'
-                            label="Direccion"
-                            value={inputs.direccion}
+                            label="Address"
+                            value={inputs.address}
                             type={'text'}
-                            name='direccion'
+                            name='address'
                             onChange={handleChange}
                             fullWidth
                             size="small"
@@ -98,7 +97,7 @@ export function CrearEdificio() {
                             fullWidth
                             type='submit'
                         >
-                            Crear
+                            Register
                         </Button>
 
                     </Box>
@@ -108,7 +107,6 @@ export function CrearEdificio() {
     } else {
         return (
             <>
-                <Edificio></Edificio>
                 <Box
                     display="flex"
                     flexDirection={"column"}
@@ -131,11 +129,11 @@ export function CrearEdificio() {
                         padding={3}
                         textAlign='center'
                     >
-                        Edificio creado con exito!
+                        Building created successfully!
                     </Typography>
                     <Button
-                        onClick={volver} fullWidth sx={{marginTop: 2}} variant='contained'
-                        color='secondary'>Volver
+                        onClick={goBack} fullWidth sx={{marginTop: 2}} variant='contained'
+                        color='secondary'>Go Back
                     </Button>
 
                 </Box>

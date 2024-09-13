@@ -4,7 +4,6 @@ import {Login} from './components/Login'
 import {HashRouter, Route, Routes, useLocation} from 'react-router-dom';
 import {CreateComplaint} from './components/CreateComplaint';
 import {Complaint} from './components/Complaint'
-import Building from './components/Building';
 import {Logout} from './components/Logout';
 import {CreateBuilding} from './components/CreateBuilding'
 import {SignUp} from "./components/SignUp";
@@ -25,7 +24,6 @@ function App() {
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/create-complaint" element={< CreateComplaint/>}/>
                 <Route path="/consultar-reclamos" element={<Complaint/>}/>
-                <Route path="/administrar-edificios" element={<Building/>}/>
                 <Route path="/create-building" element={<CreateBuilding/>}/>
                 <Route path="/logout" element={<Logout/>}/>
             </Routes>

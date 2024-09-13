@@ -15,28 +15,44 @@ export const handleUpload = async (selectedFile, complaintID, imageSelected) => 
             body: formData,
         });
         if (!saveImage.ok) {
-            const errorText = await saveImage.text();
-            throw new Error(errorText);
+            const errorMessage = await saveImage.text();
+            return {
+                success: false,
+                error: errorMessage
+            }
         }
-
-        return saveImage;
+        return {
+            success: true,
+            data: saveImage
+        };
     } catch (error) {
-        return error.message;
+        return {
+            success: false,
+            data: error.message
+        };
     }
 };
 
 export const getImage = async (complaintID) => {
     try {
         const response = await fetch(`${IMAGE_CONTROLLER}${complaintID}`);
-
         if (!response.ok) {
-            throw new Error(`Failed to fetch image: ${response.statusText}`);
+            const errorMessage = await response.text();
+            return {
+                success: false,
+                error: errorMessage
+            }
         }
-
         const imageBlob = await response.blob();
-        const imageObjectURL = URL.createObjectURL(imageBlob);
-        return imageObjectURL;
+        return {
+            success: true,
+            data: URL.createObjectURL(imageBlob)
+        }
     } catch (error) {
-        console.error('Error:', error.message);
+        return {
+            success: false,
+            data: error.message
+        };
     }
 }
+

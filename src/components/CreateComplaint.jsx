@@ -1,18 +1,19 @@
 import {Box, Button, MenuItem, TextField, Typography} from '@mui/material'
 import React, {useEffect, useState} from 'react'
 import {styled} from '@mui/material/styles';
-import {NavBar} from './NavBar'
 import {useAuth} from './auth'
-import {getUserByDocument} from './../services/serviceLogin'
-import {getBuildingsByTenant} from '../services/edificioService'
-import {createComplaint} from '../services/reclamoService'
+import {getPersonByDocument} from '../services/personService'
+import {getBuildingsByTenant} from '../services/buildingService'
+import {createComplaint} from '../services/complaintService'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {handleUpload} from "../services/fileService";
 
 export function CreateComplaint() {
-    const use = useAuth();
-    const [complaintID, setComplaintID] = useState('')
-    const [errorMessage, setErrorMessage] = useState('')
+    const auth = useAuth();
+    const [userData, setUserData] = useState({
+        date: '',
+        nameUser: ''
+    })
     const [buildings, setBuildings] = useState([{
         name: '',
         address: '',
@@ -28,8 +29,6 @@ export function CreateComplaint() {
         floor: '',
         unitNumber: ''
     }]);
-    const [selectedImage, setSelectedImage] = useState('')
-    const [selectedFile, setSelectedFile] = useState(null);
     const [complaintData, setComplaintData] = useState({
         buildingName: '',
         unitID: '',
@@ -37,41 +36,32 @@ export function CreateComplaint() {
         complaintDescription: '',
         image: '',
         extensionImage: ''
-    })
-    const [userData, setUserData] = useState({
-        date: '',
-        nameUser: ''
     });
-    const VisuallyHiddenInput = styled('input')({
-        clip: 'rect(0 0 0 0)',
-        clipPath: 'inset(50%)',
-        height: 1,
-        overflow: 'hidden',
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        whiteSpace: 'nowrap',
-        width: 1,
-    });
+    const [selectedImage, setSelectedImage] = useState('')
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('')
+    const [complaintID, setComplaintID] = useState('')
+
 
     useEffect(() => {
         initialValues();
     }, [0]);
 
     const initialValues = async () => {
-        if (use.user !== null) {
-            //stores the data of the person who has logged in
-            const informationUser = await getUserByDocument(use.user).then((response) => response.json());
+        if (auth.user !== null) {
+            //set userData with login data
+            const personByDocument = await getPersonByDocument(auth.user);
             setUserData({
                 ...userData,
-                nameUser: informationUser.nombre
+                nameUser: personByDocument.data.name
             });
 
-            const buildingData = await getBuildingsByTenant(use.user).then((response) => response.json());
+            const buildingsByTenant = await getBuildingsByTenant(auth.user);
 
-            buildingData.map(building => {
-                //stores the buildings rented by the person
-                setBuildings((prevBuilding) => {
+            // eslint-disable-next-line array-callback-return
+            buildingsByTenant.map(building => {
+                //set buildings with the buildings rented by the person
+                setBuildings(prevBuilding => {
                     return [...prevBuilding,
                         {
                             name: building.buildingName,
@@ -103,12 +93,14 @@ export function CreateComplaint() {
     }
 
     const handleChange = (e) => {
+        //set complaintDescription, complaintLocation, and unitID.
         setComplaintData((prevState) => ({
             ...prevState,
             [e.target.name]: e.target.value
         }))
     }
-    const truncateImage = (imageName, characterLimit) => {
+
+    const truncate_image_name = (imageName, characterLimit) => {
         const fullName = imageName.split('\\').pop();
         const imageNameAndExtensionArray = fullName.split('.');
         const extension = imageNameAndExtensionArray.pop();
@@ -123,14 +115,15 @@ export function CreateComplaint() {
     }
 
     const handleChangeImage = (e) => {
+        //reset error message when select other image
         setErrorMessage('');
         setSelectedFile(e.target.files[0]);
 
         //truncate long image name
         const imageName = e.target.value;
-        const truncatedImageName = truncateImage(imageName, 70);
-        const imageNameWithoutSpaces = truncatedImageName.truncatedImageName.replace(/\s/g, "");
-
+        const CHARACTER_LIMIT = 70;
+        const truncatedImageName = truncate_image_name(imageName, CHARACTER_LIMIT);
+        const imageNameWithoutSpaces = truncatedImageName.truncatedImageName.replace(/[\s,]/g, "");
         setSelectedImage(imageNameWithoutSpaces + "." + truncatedImageName.extension);
 
         setComplaintData((prevState) => ({
@@ -142,7 +135,7 @@ export function CreateComplaint() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        saveComplaint(complaintData, use.user);
+        saveComplaint(complaintData, auth.user);
     }
 
     const saveComplaint = async (complaintData, documentUser) => {
@@ -153,27 +146,38 @@ export function CreateComplaint() {
         }
         //Create complaint
         const saveComplaintResponse = await createComplaint(complaintData, documentUser);
-        if (!saveComplaintResponse.ok) {
-            setErrorMessage('Failed to save complaint');
+        if (!saveComplaintResponse.success) {
+            setErrorMessage(saveComplaintResponse.error);
             return;
         }
-        const responseJson = await saveComplaintResponse.json();
-        const {idReclamo} = responseJson;
+        const responseJson = await saveComplaintResponse.data.json();
 
         //Save the image to a local directory.
-        const saveFile = await handleUpload(selectedFile, idReclamo, selectedImage);
-        if (!saveFile.ok) {
+        const saveFile = await handleUpload(selectedFile, responseJson.complaintID, selectedImage);
+        if (!saveFile.success) {
             //TODO DELETE complaint
-            setErrorMessage(saveFile);
+            setErrorMessage(saveFile.error);
+            return;
         }
         //Complaint with image submitted successfully, set complaintID
-        setComplaintID(idReclamo);
+        setComplaintID(responseJson.complaintID);
     }
+
+    const VisuallyHiddenInput = styled('input')({
+        clip: 'rect(0 0 0 0)',
+        clipPath: 'inset(50%)',
+        height: 1,
+        overflow: 'hidden',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        whiteSpace: 'nowrap',
+        width: 1,
+    });
 
     if (complaintID === '') {
         return (
             <>
-                <NavBar></NavBar>
                 <form onSubmit={handleSubmit}>
                     <Box
                         display="flex"
@@ -194,7 +198,7 @@ export function CreateComplaint() {
                     >
                         <Typography variant='h6' padding={3}>CREATE COMPLAINT</Typography>
 
-                        <Typography variant='p' padding={1}>{userData.nameUser}- {use.user}</Typography>
+                        <Typography variant='p' padding={1}>{userData.nameUser}- {auth.user}</Typography>
 
                         {<TextField
                             required={true}
@@ -319,7 +323,6 @@ export function CreateComplaint() {
     } else {
         return (
             <>
-                <NavBar></NavBar>
                 <Box
                     display="flex"
                     flexDirection="column"
