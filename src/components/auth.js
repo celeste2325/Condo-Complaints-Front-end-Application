@@ -4,19 +4,21 @@ const AuthContext = React.createContext();
 
 function AuthProvider({children}) {
     const [user, setUser] = useState(null);
-    const [contrasenia, setContrasenia] = useState(null);
+    const [password, setPassword] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
 
-    const login = (userDocumento, contrasenia) => {
-        setUser(userDocumento);
-        setContrasenia(contrasenia)
+    const login = (signUpData) => {
+        setUser(signUpData.document)
+        setIsAdmin(signUpData.role === 'admin')
+        setPassword(signUpData.password)
     }
 
     const logout = () => {
         setUser(null);
-        setContrasenia(null);
+        setPassword(null);
     }
 
-    const auth = {user, contrasenia, login, logout};
+    const auth = {user, password, isAdmin, login, logout};
 
     return (
         <AuthContext.Provider value={auth}>

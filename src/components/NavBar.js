@@ -13,57 +13,48 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import {NavLink, useNavigate} from 'react-router-dom';
 import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded';
+import {useAuth} from "./auth";
 
 const drawerWidth = 240;
-
 
 const routes = [];
 routes.push({
     to: '/create-complaint',
-    text: 'Create a complaint'
+    text: 'Create complaint'
 });
 routes.push({
     to: '/home',
-    text: 'Consultar reclamos'
+    text: 'View complaints'
 });
 
-const routesAdministrador = [];
-routesAdministrador.push({
-    to: '/crear-edificio',
-    text: 'Administrar edificios'
+const routesAdmin = [];
+routesAdmin.push({
+    to: '/create-building',
+    text: 'Create Building'
 });
-routesAdministrador.push({
-    to: '/administrar-personas',
-    text: 'Administrar personas',
-});
-routesAdministrador.push({
+
+routesAdmin.push({
     to: '/home',
-    text: 'Consultar reclamos'
+    text: 'View complaints'
 });
-
 
 export function NavBar(props) {
-    const navigate = useNavigate();
-    const {window, isAdministrador} = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
+    const navigate = useNavigate();
+    const {isAdmin} = useAuth();
+    const {window} = props;
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
     const menuVariable = () => {
-        if (isAdministrador) {
-            return routesAdministrador;
-
-        } else {
-            return routes;
-        }
-
+        return isAdmin ? routesAdmin : routes;
     }
 
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{textAlign: 'center'}}>
             <Typography variant="h6" sx={{my: 2}}>
-                Reclamo de consorcios
+                Condo's complaints
             </Typography>
             <Divider/>
             <List>
@@ -112,7 +103,7 @@ export function NavBar(props) {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}, textAlign: 'left'}}
                     >
-                        Reclamo de consorcios
+                        Condo's complaints
 
                     </Typography>
                     <Box sx={{display: {xs: 'none', sm: 'block'}}}>

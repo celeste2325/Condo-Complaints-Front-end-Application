@@ -1,14 +1,14 @@
 import React, {useState} from 'react'
 import {Box, Button, TextField, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
-import {getIncioDeSesion} from '../services/serviceLogin'
-import fondo from '../assets/images/background.jpg'
+import {login} from '../services/authService'
+import background from '../assets/images/background.jpg'
 import {useNavigate} from 'react-router-dom';
 import {useAuth} from './auth'
 
 const useStyles = makeStyles(theme => ({
     root: {
-        backgroundImage: `url(${fondo})`,
+        backgroundImage: `url(${background})`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -28,10 +28,12 @@ export const Login = () => {
     const classes = useStyles();
     const [loginData, setLoginData] = useState({
         document: '',
-        password: ''
+        password: '',
+        role: ''
     });
     const [errorMessage, setErrorMessage] = useState('')
 
+    //set document and password
     const handleChange = (e) => {
         setLoginData((prevState) => ({
             ...prevState,
@@ -43,18 +45,22 @@ export const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        sign_in();
+        log_in();
     };
 
-    const sign_in = async () => {
-        const loginResponse = await getIncioDeSesion(loginData.document, loginData.password);
-        if (loginResponse.ok) {
-            const response = await loginResponse.text();
-            auth.login(loginData.document, loginData.password);
-            navigate('/home');
-        } else {
-            setErrorMessage('Incorrect document or password');
+    const log_in = async () => {
+        const loginResponse = await login(loginData);
+        if (!loginResponse.success) {
+            setErrorMessage(loginResponse.error);
+            return;
         }
+        const updateLoginData = {
+            ...loginData,
+            role: loginResponse.data
+        };
+
+        auth.login(updateLoginData);
+        navigate('/home');
     }
 
     const navigateSignUp = () => {
