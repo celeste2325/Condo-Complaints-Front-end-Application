@@ -1,35 +1,46 @@
 import React from 'react'
 import {Home} from './components/Home';
 import {Login} from './components/Login'
-import {HashRouter, Route, Routes} from 'react-router-dom';
+import {HashRouter, Route, Routes, useLocation} from 'react-router-dom';
 import {CreateComplaint} from './components/CreateComplaint';
 import {Complaint} from './components/Complaint'
-import Edificio from './components/Edificio';
-import Persona from './components/Persona';
+import Building from './components/Building';
 import {Logout} from './components/Logout';
-import {AuthProvider} from './components/auth'
-import {CrearEdificio} from './components/CrearEdificio'
+import {CreateBuilding} from './components/CreateBuilding'
 import {SignUp} from "./components/SignUp";
+import {NavBar} from "./components/NavBar";
+import {AuthProvider} from "./components/auth";
 
 function App() {
+    const location = useLocation();
+    const hideNavBarRoutes = ['/', '/login', '/logout', '/signUp'];
+
     return (
-        <HashRouter>
-            <AuthProvider>
-                <Routes>
-                    <Route path="/" element={<Login/>}/>
-                    <Route path="/home" element={<Home/>}/>
-                    <Route path="/signUp" element={<SignUp/>}/>
-                    <Route path="/login" element={<Login/>}/>
-                    <Route path="/create-complaint" element={< CreateComplaint/>}/>
-                    <Route path="/consultar-reclamos" element={<Complaint/>}/>
-                    <Route path="/administrar-edificios" element={<Edificio/>}/>
-                    <Route path="/crear-edificio" element={<CrearEdificio/>}/>
-                    <Route path="/administrar-personas" element={<Persona/>}/>
-                    <Route path="/logout" element={<Logout/>}/>
-                </Routes>
-            </AuthProvider>
-        </HashRouter>
+        <>
+            {!hideNavBarRoutes.includes(location.pathname) && <NavBar/>}
+            <Routes>
+                <Route path="/" element={<Login/>}/>
+                <Route path="/home" element={<Home/>}/>
+                <Route path="/signUp" element={<SignUp/>}/>
+                <Route path="/login" element={<Login/>}/>
+                <Route path="/create-complaint" element={< CreateComplaint/>}/>
+                <Route path="/consultar-reclamos" element={<Complaint/>}/>
+                <Route path="/administrar-edificios" element={<Building/>}/>
+                <Route path="/create-building" element={<CreateBuilding/>}/>
+                <Route path="/logout" element={<Logout/>}/>
+            </Routes>
+        </>
     );
 }
 
-export default App;
+const RootApp = () => {
+    return (
+        <HashRouter>
+            <AuthProvider>
+                <App/>
+            </AuthProvider>
+        </HashRouter>
+    )
+}
+
+export default RootApp;
