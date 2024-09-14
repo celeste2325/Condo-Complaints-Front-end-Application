@@ -7,6 +7,7 @@ import {getBuildingsByTenant} from '../services/buildingService'
 import {createComplaint} from '../services/complaintService'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {handleUpload} from "../services/fileService";
+import ModalMessages from "./ModalMessages";
 
 export function CreateComplaint() {
     const auth = useAuth();
@@ -41,7 +42,6 @@ export function CreateComplaint() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [errorMessage, setErrorMessage] = useState('')
     const [complaintID, setComplaintID] = useState('')
-
 
     useEffect(() => {
         initialValues();
@@ -175,154 +175,9 @@ export function CreateComplaint() {
         width: 1,
     });
 
-    if (complaintID === '') {
-        return (
-            <>
-                <form onSubmit={handleSubmit}>
-                    <Box
-                        display="flex"
-                        flexDirection="column"
-                        justifyContent={"center"}
-                        alignItems="center"
-                        maxWidth={300}
-                        margin='auto'
-                        marginTop={'15%'}
-                        padding={3}
-                        borderRadius={3}
-                        boxShadow={'5px 5px 10px #ccc'}
-                        sx={{
-                            ':hover': {
-                                boxShadow: '10px 10px 20px #ccc'
-                            }
-                        }}
-                    >
-                        <Typography variant='h6' padding={3}>CREATE COMPLAINT</Typography>
-
-                        <Typography variant='p' padding={1}>{userData.nameUser}- {auth.user}</Typography>
-
-                        {<TextField
-                            required={true}
-                            name="building"
-                            margin='normal'
-                            id="outlined-select-currency"
-                            select
-                            label="Select building"
-                            value={complaintData.buildingName}
-                            onChange={handleSelectBuilding}
-                            fullWidth
-                            size="small"
-                        >
-                            {buildings.map((building) => (
-                                building.name !== '' &&
-                                <MenuItem key={building.buildingID} value={building}>Name: {building.name},
-                                    Address: {building.address}</MenuItem>
-                            ))}
-                        </TextField>}
-
-                        {units.length > 0 && <TextField
-                            required={true}
-                            margin='normal'
-                            id="outlined-select-currency"
-                            select
-                            label="Select unit"
-                            value={complaintData.unitID}
-                            name='unitID'
-                            onChange={handleChange}
-                            fullWidth
-                            size="small"
-                        >
-                            {units.map((unit) => (
-                                    unit.floor !== '' && <MenuItem key={unit.unitID} value={unit.unitID}>
-                                        Floor: {unit.floor}, Unit number: {unit.unitNumber}
-                                    </MenuItem>)
-                            )}
-                        </TextField>
-                        }
-
-                        <TextField
-                            required={true}
-                            margin='normal'
-                            label="Complaint location"
-                            value={complaintData.complaintLocation}
-                            type={'text'}
-                            name='complaintLocation'
-                            onChange={handleChange}
-                            fullWidth
-                            size="small"
-                            variant='outlined'
-                            xs={{
-                                color: 'red'
-                            }}
-                        >
-                        </TextField>
-
-                        <TextField
-                            required={true}
-                            margin='normal'
-                            type={'text'}
-                            label="Complaint description"
-                            value={complaintData.complaintDescription}
-                            name='complaintDescription'
-                            onChange={handleChange}
-                            fullWidth
-                            size="small"
-                            variant='outlined'>
-                        </TextField>
-
-                        <Button
-                            sx={{marginTop: 2}}
-                            fullWidth
-                            value={complaintData.image}
-                            name='image'
-                            onChange={handleChangeImage}
-                            component="label"
-                            role={undefined}
-                            variant="outlined"
-                            tabIndex={-1}
-                            startIcon={<CloudUploadIcon/>}
-                        >
-                            Upload evidence
-                            <VisuallyHiddenInput type="file" accept='image/*'/>
-                        </Button>
-
-                        {selectedImage !== '' &&
-                            <TextField
-                                type={'text'}
-                                value={selectedImage}
-                                name='selectedImage'
-                                fullWidth
-                                size="small"
-                                variant='outlined'
-                                sx={{
-                                    '& .MuiOutlinedInput-root': {
-                                        '& fieldset': {
-                                            border: 'none',
-                                        },
-                                        '&.Mui-focused fieldset': {
-                                            border: 'none',
-                                        },
-                                    },
-                                }}
-                            >
-                            </TextField>}
-                        {errorMessage !== '' && <p style={{color: 'red'}}>{errorMessage}</p>}
-                        <Button
-                            sx={{marginTop: 2}}
-                            variant='contained'
-                            color='primary'
-                            fullWidth
-                            type='submit'
-                        >
-                            Create
-                        </Button>
-
-                    </Box>
-                </form>
-            </>
-        )
-    } else {
-        return (
-            <>
+    return (
+        <>
+            <form onSubmit={handleSubmit}>
                 <Box
                     display="flex"
                     flexDirection="column"
@@ -330,7 +185,7 @@ export function CreateComplaint() {
                     alignItems="center"
                     maxWidth={300}
                     margin='auto'
-                    marginTop={'30%'}
+                    marginTop={'15%'}
                     padding={3}
                     borderRadius={3}
                     boxShadow={'5px 5px 10px #ccc'}
@@ -340,24 +195,134 @@ export function CreateComplaint() {
                         }
                     }}
                 >
-                    <Typography
-                        variant='h5'
-                        padding={3}
-                        textAlign='center'
-                    >
-                        Complaint submitted successfully!
-                    </Typography>
+                    <Typography variant='h6' padding={3}>CREATE COMPLAINT</Typography>
 
-                    {<Typography
-                        variant='p'
-                        padding={3}
+                    <Typography variant='p' padding={1}>{userData.nameUser}- {auth.user}</Typography>
+
+                    {<TextField
+                        required={true}
+                        name="building"
+                        margin='normal'
+                        id="outlined-select-currency"
+                        select
+                        label="Select building"
+                        value={complaintData.buildingName}
+                        onChange={handleSelectBuilding}
+                        fullWidth
+                        size="small"
                     >
-                        Complaint Number: {complaintID}
-                    </Typography>
+                        {buildings.map((building) => (
+                            building.name !== '' &&
+                            <MenuItem key={building.buildingID} value={building}>Name: {building.name},
+                                Address: {building.address}</MenuItem>
+                        ))}
+                    </TextField>}
+
+                    {units.length > 0 && <TextField
+                        required={true}
+                        margin='normal'
+                        id="outlined-select-currency"
+                        select
+                        label="Select unit"
+                        value={complaintData.unitID}
+                        name='unitID'
+                        onChange={handleChange}
+                        fullWidth
+                        size="small"
+                    >
+                        {units.map((unit) => (
+                                unit.floor !== '' && <MenuItem key={unit.unitID} value={unit.unitID}>
+                                    Floor: {unit.floor}, Unit number: {unit.unitNumber}
+                                </MenuItem>)
+                        )}
+                    </TextField>
                     }
-                </Box>
-            </>
-        )
-    }
 
+                    <TextField
+                        required={true}
+                        margin='normal'
+                        label="Complaint location"
+                        value={complaintData.complaintLocation}
+                        type={'text'}
+                        name='complaintLocation'
+                        onChange={handleChange}
+                        fullWidth
+                        size="small"
+                        variant='outlined'
+                        xs={{
+                            color: 'red'
+                        }}
+                    >
+                    </TextField>
+
+                    <TextField
+                        required={true}
+                        margin='normal'
+                        type={'text'}
+                        label="Complaint description"
+                        value={complaintData.complaintDescription}
+                        name='complaintDescription'
+                        onChange={handleChange}
+                        fullWidth
+                        size="small"
+                        variant='outlined'>
+                    </TextField>
+
+                    <Button
+                        sx={{marginTop: 2}}
+                        fullWidth
+                        value={complaintData.image}
+                        name='image'
+                        onChange={handleChangeImage}
+                        component="label"
+                        role={undefined}
+                        variant="outlined"
+                        tabIndex={-1}
+                        startIcon={<CloudUploadIcon/>}
+                    >
+                        Upload evidence
+                        <VisuallyHiddenInput type="file" accept='image/*'/>
+                    </Button>
+
+                    {selectedImage !== '' &&
+                        <TextField
+                            type={'text'}
+                            value={selectedImage}
+                            name='selectedImage'
+                            fullWidth
+                            size="small"
+                            variant='outlined'
+                            sx={{
+                                '& .MuiOutlinedInput-root': {
+                                    '& fieldset': {
+                                        border: 'none',
+                                    },
+                                    '&.Mui-focused fieldset': {
+                                        border: 'none',
+                                    },
+                                },
+                            }}
+                        >
+                        </TextField>}
+                    {errorMessage !== '' && <p style={{color: 'red'}}>{errorMessage}</p>}
+                    <Button
+                        sx={{marginTop: 2}}
+                        variant='contained'
+                        color='primary'
+                        fullWidth
+                        type='submit'
+                    >
+                        Create
+                    </Button>
+                </Box>
+            </form>
+            {
+                complaintID !== '' &&
+                <ModalMessages
+                    title='Complaint submitted successfully!'
+                    description={`Complaint Number: ${complaintID}`}
+                />
+            }
+        </>
+    )
 }

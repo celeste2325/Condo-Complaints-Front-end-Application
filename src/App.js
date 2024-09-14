@@ -9,6 +9,8 @@ import {CreateBuilding} from './components/CreateBuilding'
 import {SignUp} from "./components/SignUp";
 import {NavBar} from "./components/NavBar";
 import {AuthProvider} from "./components/auth";
+import ModalMessages from "./components/ModalMessages";
+
 
 function App() {
     const location = useLocation();
@@ -26,6 +28,7 @@ function App() {
                 <Route path="/consultar-reclamos" element={<Complaint/>}/>
                 <Route path="/create-building" element={<CreateBuilding/>}/>
                 <Route path="/logout" element={<Logout/>}/>
+                <Route path="/modal" element={<ModalMessages/>}/>
             </Routes>
         </>
     );
