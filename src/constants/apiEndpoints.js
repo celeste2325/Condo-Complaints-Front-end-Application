@@ -3,7 +3,6 @@ const BUILDING_CONTROLLER = `${API_BASE_URL}building/`;
 const COMPLAINT_CONTROLLER = `${API_BASE_URL}complaint/`;
 const FILE_CONTROLLER = `${API_BASE_URL}file/`;
 const IMAGE_CONTROLLER = `${API_BASE_URL}image/`;
-const UNIT_CONTROLLER = `${API_BASE_URL}unit/`;
 const PERSON_CONTROLLER = `${API_BASE_URL}person/`;
 const AUTH_CONTROLLER = `${API_BASE_URL}auth/`;
 
