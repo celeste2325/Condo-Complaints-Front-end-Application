@@ -128,14 +128,6 @@ export function Complaint(props) {
                 <Card sx={{minWidth: '100%'}}>
                     <GridPagination/>
                     {showDataComplaint &&
-                        <CardMedia
-                            component="img"
-                            height="auto"
-                            image={selectedComplaintImage}
-                            title="Photo issue"
-                        />
-                    }
-                    {showDataComplaint &&
                         <CardContent>
                             <Typography gutterBottom variant="h5" component="div">
                                 {selectedComplaint.buildingName} Building |
@@ -155,6 +147,14 @@ export function Complaint(props) {
                                 </Typography>
                                 {selectedComplaint.status}
                             </Typography>
+                            {showDataComplaint &&
+                                <CardMedia
+                                    component="img"
+                                    height="auto"
+                                    image={selectedComplaintImage}
+                                    title="Photo issue"
+                                />
+                            }
                         </CardContent>
                     }
                 </Card>
