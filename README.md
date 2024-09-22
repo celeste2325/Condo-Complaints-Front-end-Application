@@ -12,10 +12,17 @@ their condominium complex, view existing complaints, and manage their submission
 
 ## Prerequisites
 
-Before you begin, ensure you have met the following requirements:
+Ensure you have the following installed:
 
-- Node.js (version 14 or higher)
-- npm (Node Package Manager)
+- Node.js: Version 20.x.x
+- npm: Version 10.8.x
+  You can verify your versions by running the following commands in your terminal:
+
+```
+node -v
+npm -v
+```
+
 - follow the setup instructions in the `README.md` of
   the [Condo Complaints Backend](https://github.com/celeste2325/Condo-complaints-back-end) repository to configure the
   backend service.
@@ -23,12 +30,13 @@ Before you begin, ensure you have met the following requirements:
 ## Installation
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/condo-complaints-frontend.git
-   cd condo-complaints-frontend
-   ```
 
-Install dependencies:
+```bash
+git clone https://github.com/yourusername/condo-complaints-frontend.git
+cd condo-complaints-frontend
+```
+
+2) Install dependencies:
 
 ```bash
 npm install
